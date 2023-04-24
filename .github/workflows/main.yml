@@ -37,9 +37,7 @@ jobs:
           username: ${{ secrets.TESTE_USER }}
           key: ${{ secrets.TESTE_KEY }}
           script: 
-        
-          #!/bin/bash
-          sudo apt install apache2 -y  
+          #!/bin/bash  sudo apt install apache2 -y  
         
             
             
