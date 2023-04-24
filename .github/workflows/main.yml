@@ -29,9 +29,8 @@ jobs:
           remote-user: ${{ secrets.TESTE_USER }}
           private-ssh-key: ${{ secrets.TESTE_KEY }}
           destination-path: ${{ secrets.TESTE_PATH }}
-         
-
-
+             rsync-options: ${{secrets.TESTANDO }}
+       
       - name: Execute deploy commands
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -40,7 +39,8 @@ jobs:
           key: ${{ secrets.TESTE_KEY }}
           script: |
             sudo su
-            ./ ${{ secrets.TESTE_COMANDO }}
+            ./paulo
+            
         
             
             
