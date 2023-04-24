@@ -29,7 +29,6 @@ jobs:
           remote-user: ${{ secrets.TESTE_USER }}
           private-ssh-key: ${{ secrets.TESTE_KEY }}
           destination-path: ${{ secrets.TESTE_PATH }}
-             rsync-options:
        
       - name: Execute deploy commands
         uses: appleboy/ssh-action@v0.1.7
@@ -37,10 +36,10 @@ jobs:
           host: ${{ secrets.TESTE_HOST }}
           username: ${{ secrets.TESTE_USER }}
           key: ${{ secrets.TESTE_KEY }}
-          script: |
-            sudo su
-            ./paulo
-            
+          script: 
+        
+          #!/bin/bash
+          sudo apt install apache2 -y  
         
             
             
