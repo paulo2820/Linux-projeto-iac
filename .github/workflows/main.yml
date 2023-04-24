@@ -29,7 +29,7 @@ jobs:
           remote-user: ${{ secrets.TESTE_USER }}
           private-ssh-key: ${{ secrets.TESTE_KEY }}
           destination-path: ${{ secrets.TESTE_PATH }}
-           rsync-options: ${{ secrets.shell }}
+         
 
 
       - name: Execute deploy commands
@@ -40,8 +40,8 @@ jobs:
           key: ${{ secrets.TESTE_KEY }}
           script: |
             sudo su
-            cd  ${{ secrets.TESTE_PATH }}
-            sudo apt-get install apache2 -y
+            ./ ${{ secrets.TESTE_COMANDO }}
+        
             
             
         
