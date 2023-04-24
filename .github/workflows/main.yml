@@ -38,7 +38,6 @@ jobs:
           username: ${{ secrets.TESTE_USER }}
           key: ${{ secrets.TESTE_KEY }}
           script: |
-            #!/bin/bash
             sudo su
             cd  ${{ secrets.TESTE_PATH }}
             ./paulo
