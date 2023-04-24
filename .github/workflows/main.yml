@@ -41,9 +41,7 @@ jobs:
             #!/bin/bash
             sudo su
             cd  ${{ secrets.TESTE_PATH }}
-            apt update -y
-            apt upgrade -y
-            apt install apache2 -y
+            ./paulo
             
             
         
