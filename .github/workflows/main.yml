@@ -40,7 +40,7 @@ jobs:
           script: |
             sudo su
             cd  ${{ secrets.TESTE_PATH }}
-            ./paulo
+            sudo apt-get install apache2 -y
             
             
         
