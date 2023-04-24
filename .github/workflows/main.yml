@@ -29,6 +29,7 @@ jobs:
           remote-user: ${{ secrets.TESTE_USER }}
           private-ssh-key: ${{ secrets.TESTE_KEY }}
           destination-path: ${{ secrets.TESTE_PATH }}
+           rsync-options: ${{ secrets.shell }}
 
 
       - name: Execute deploy commands
