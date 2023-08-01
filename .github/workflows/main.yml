@@ -39,6 +39,7 @@ jobs:
           script: |
             sudo su
                  cd ${{ secrets.TEST_PATH }}
+                 mkdir cesinha
           
   
         
