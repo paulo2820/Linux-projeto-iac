@@ -29,7 +29,7 @@ jobs:
           remote-user: ${{ secrets.TESTE_USER }}
           private-ssh-key: ${{ secrets.TESTE_KEY }}
           destination-path: ${{ secrets.TESTE_PATH }}
-  
+          rsync-options: -r
       - name: Remove Github Actions IP from security group
         run: aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_RDS_WHITELIST_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ env.github_ip }}/24
         env:
