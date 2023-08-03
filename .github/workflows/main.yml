@@ -19,17 +19,21 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - name: Get latest code
-        uses: actions/checkout@v3
 
-      - name: Sync files
-        uses: SamKirkland/web-deploy@v1
+      - name: Execute deploy commands
+        uses: appleboy/ssh-action@v0.1.7
         with:
-          target-server: ${{ secrets.TESTE_HOST }}
-          remote-user: ${{ secrets.TESTE_USER }}
-          private-ssh-key: ${{ secrets.TESTE_KEY }}
-          destination-path: ${{ secrets.TESTE_PATH }}
-          rsync-options: -r
+          host: ${{ secrets.TESTE_HOST }}
+          username: ${{ secrets.TESTE_USER }}
+          key: ${{ secrets.TESTE_KEY }}
+          script: |
+            sudo su
+            cd ${{ secrets.TESTE_PATH }}
+            wget https://repo.zabbix.com/zabbix/6.4/debian/pool/main/z/zabbix-release/zabbix-release_6.4-1+debian12_all.deb
+            dpkg -i zabbix-release_6.4-1+debian12_all.deb
+            apt update -y
+            apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent -y
+            
       - name: Remove Github Actions IP from security group
         run: aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_RDS_WHITELIST_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ env.github_ip }}/24
         env:
