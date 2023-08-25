@@ -13,29 +13,39 @@ jobs:
           echo "github_ip=$ip" >> $GITHUB_ENV
 
       - name: Add Github Actions IP to security group
-        run: aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_RDS_WHITELIST_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ env.github_ip }}/24
+        run: aws ec2 authorize-security-group-ingress --group-id ${{ secrets.SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ env.github_ip }}/24
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
+      - name: Get latest code
+        uses: actions/checkout@v3
 
+      - name: Sync files
+        uses: SamKirkland/web-deploy@v1
+        with:
+          target-server: ${{ secrets.TESTE_HOST }}
+          remote-user: ${{ secrets.TESTE_USER }}
+          private-ssh-key: ${{ secrets.TESTE_KEY }}
+          destination-path: ${{ secrets.TESTE_PATH }}
+          rsync-options: -r
+          
       - name: Execute deploy commands
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.TESTE_HOST }}
           username: ${{ secrets.TESTE_USER }}
           key: ${{ secrets.TESTE_KEY }}
-          script:
-        
+          script: |
+            sudo su
             cd ${{ secrets.TESTE_PATH }}
-            wget https://repo.zabbix.com/zabbix/6.4/debian/pool/main/z/zabbix-release/zabbix-release_6.4-1+debian12_all.deb
-            sudo dpkg -i zabbix-release_6.4-1+debian12_all.deb
-           sudo apt update -y
-            sudo apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent -y
-            
+            composer install --no-interaction --no-dev --optimize-autoloader
+          
+
+          
       - name: Remove Github Actions IP from security group
-        run: aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_RDS_WHITELIST_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ env.github_ip }}/24
+        run: aws ec2 revoke-security-group-ingress --group-id ${{ secrets.SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ env.github_ip }}/24
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
